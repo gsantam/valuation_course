@@ -46,3 +46,37 @@ def mergeFuzzyDate(df_main, df_aux, date_main, date_aux, join_by = None, aux_fea
 # betas_industry['test'] = np.random.rand(len(betas_industry2))
 # betas_industry
 # mergeFuzzyDate(data, betas_industry, date_main = 'date', date_aux = 'Date', join_by = ['Industry'], aux_features = ['test'], debug = True)
+
+
+## Finance Formulas
+def PVAnnuity(annual_value, discount_rate, n_years):
+    """
+    Calculate the present value of an annuity.
+    """
+    return annual_value * (1 - (1 + discount_rate) ** (-n_years)) / rate
+
+def PVFutureValue(future_value, discount_rate, n_years):
+    """
+    Calculate the present value of a cash flow.
+    """
+    return future_value / (1 + discount_rate) ** (n_years)
+
+def PVGrowingAnnuity(annual_value, discount_rate, growth_rate, n_years):
+    """
+    PV of a growing annuity.
+    Present value of Annual CF of annual_value for n_years, with constant growth growth_rate.
+    """
+    return annual_value * (1 + growth_rate) * (1 - (1 + growth_rate) ** (n_years) / (1 + discount_rate) ** (n_years)) / (discount_rate - growth_rate)
+
+def PVPerpetuity(annual_value, discount_rate):
+    """
+    PV of a Perpetual annuity.
+    """
+    return annual_value / discount_rate
+
+def PVGrowingPerpetuity(annual_value, discount_rate, growth_rate):
+    """
+    PV of a growing Perpetual annuity.
+    Cash flows growing at constant rate g
+    """
+    return annual_value * (1 + growth_rate) / (discount_rate - growth_rate)
