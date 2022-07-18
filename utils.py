@@ -1,4 +1,4 @@
-def mergeFuzzyDate(df_main, df_aux, date_main, date_aux, join_by = None, aux_features = None, debug = False):
+def mergeFuzzyDate(df_main, df_aux, date_main, date_aux, join_by = None, aux_features = None, days_aprox = 0, debug = False):
     """
     Merge two dataframes by fuzzy date.
     - df_main: main dataframe
@@ -29,14 +29,14 @@ def mergeFuzzyDate(df_main, df_aux, date_main, date_aux, join_by = None, aux_fea
         left_on = date_main, right_on = 'Date_nearest', direction = 'nearest')
     df_main = pd.merge_asof(df_main, df_aux.rename(columns = {date_aux: 'Date_back'}), by = join_by, \
         left_on = date_main, right_on = 'Date_back', direction = 'backward')
-    df_main = pd.merge_asof(df_main, df_aux.rename(columns = {date_aux: 'Date_14D'}), by = join_by, \
-        left_on = date_main, right_on = 'Date_14D', direction = 'nearest',  tolerance = timedelta(days = 14))
+    df_main = pd.merge_asof(df_main, df_aux.rename(columns = {date_aux: 'Date_aprox'}), by = join_by, \
+        left_on = date_main, right_on = 'Date_aprox', direction = 'nearest',  tolerance = timedelta(days = days_aprox))
 
     for feature in aux_features:
         df_main[feature] = df_main[feature].fillna(df_main[f"{feature}_y"]).fillna(df_main[f"{feature}_x"])
 
     if not debug:
-        df_main.drop(columns = ['Date_14D', 'Date_back', 'Date_nearest'], inplace = True)
+        df_main.drop(columns = ['Date_aprox', 'Date_back', 'Date_nearest'], inplace = True)
         for feature in aux_features:
             df_main.drop(columns = [f"{feature}_x", f"{feature}_y"], inplace = True)
         
